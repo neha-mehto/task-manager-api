@@ -1,19 +1,19 @@
-# Task Manager API
+Title: Task Manager API
 
 A secure, modular RESTful API for managing tasks. This system is backed by a hybrid database strategy: **PostgreSQL** handles user accounts and authentication, while **MongoDB** manages user-specific tasks.
 
 ---
 
-## Features
-- **Dual Databases**: Secure user authentication storage in PostgreSQL and flexible task document storage in MongoDB.
-- **User Authentication**: Register, Login, and JWT Token-based protection.
-- **Task CRUD**: Create, read, update, and delete tasks under complete user ownership.
-- **Server-Side Validation**: Rich query and body parameter checking (e.g., email format, required fields, ISO 8601 due dates).
-- **Centralized Error Handling**: Clean, consistent global error mapping for database violations, validation errors, and authentication failures.
+1. Features
+(i). Dual Databases: Secure user authentication storage in PostgreSQL and flexible task document storage in MongoDB.
+(ii). User Authentication: Register, Login, and JWT Token-based protection.
+(iii). Task CRUD: Create, read, update, and delete tasks under complete user ownership.
+(iv). Server-Side Validation: Rich query and body parameter checking (e.g., email format, required fields, ISO 8601 due dates).
+(v). Centralized Error Handling: Clean, consistent global error mapping for database violations, validation errors, and authentication failures.
 
 ---
 
-## Technologies Used
+2. Technologies Used
 - **Runtime**: Node.js (v25.1.0)
 - **Framework**: Express.js (v5.2.1)
 - **Object Modeling (MongoDB)**: Mongoose (v9.7.2)
@@ -24,7 +24,7 @@ A secure, modular RESTful API for managing tasks. This system is backed by a hyb
 
 ---
 
-## Folder Structure
+3. Folder Structure
 
 ```
 task-manager-api/
@@ -62,7 +62,7 @@ task-manager-api/
 
 ---
 
-## Installation
+4. Installation
 
 1. Clone or copy the repository files.
 2. Open your terminal in the directory root.
@@ -73,7 +73,7 @@ task-manager-api/
 
 ---
 
-## Environment Variables
+5. Environment Variables
 
 Create a `.env` file at the root of the project with the following configuration:
 
@@ -94,9 +94,9 @@ MONGO_URI=mongodb://localhost:27017/taskmanager
 
 ---
 
-## Database Setup
+6. Database Setup
 
-### 1. PostgreSQL (Authentication Store)
+(i). PostgreSQL (User Management /Authentication Store)
 Ensure PostgreSQL is running, then log in and run:
 ```sql
 CREATE DATABASE taskmanager;
@@ -111,12 +111,12 @@ CREATE TABLE users (
 );
 ```
 
-### 2. MongoDB (Task Store)
+(ii). MongoDB (Task Management / Task Store)
 Ensure MongoDB is running locally on port `27017` with a database named `taskmanager`. The MongoDB collections will be automatically created on startup by the Mongoose schemas.
 
 ---
 
-## Run Project
+7. Run Project
 
 ### Development Mode
 Runs the server with Nodemon (auto-reloads on file changes):
@@ -131,19 +131,19 @@ npm start
 
 ---
 
-## API Documentation
+8. API Documentation
 
-### Authentication Routes
+(i). Authentication Routes
 - **`POST /api/auth/register`** — Registers a new user.
   - **Body**: `{ "email": "user@example.com", "password": "securepassword" }`
 - **`POST /api/auth/login`** — Logs in an existing user and returns a token.
   - **Body**: `{ "email": "user@example.com", "password": "securepassword" }`
 
-### User Routes (Protected)
+(ii). User Routes (Protected)
 - **`GET /api/users/profile`** — Fetch current logged-in user profile.
   - **Headers**: `Authorization: Bearer <JWT_TOKEN>`
 
-### Task Routes (Protected)
+(iii). Task Routes (Protected)
 - **`POST /api/tasks`** — Create a new task.
   - **Headers**: `Authorization: Bearer <JWT_TOKEN>`
   - **Body**: `{ "title": "Review PRs", "description": "Check task controller", "dueDate": "2026-06-30T12:00:00Z" }`
@@ -159,9 +159,9 @@ npm start
 
 ---
 
-## Sample Responses
+9. Sample Responses
 
-### 1. Registration Success (`POST /api/auth/register`)
+(i). Registration Success (`POST /api/auth/register`)
 **Status**: `201 Created`
 ```json
 {
@@ -174,7 +174,7 @@ npm start
 }
 ```
 
-### 2. Login Success (`POST /api/auth/login`)
+(ii). Login Success (`POST /api/auth/login`)
 **Status**: `200 OK`
 ```json
 {
@@ -184,7 +184,7 @@ npm start
 }
 ```
 
-### 3. Task Creation Success (`POST /api/tasks`)
+(iii). Task Creation Success (`POST /api/tasks`)
 **Status**: `201 Created`
 ```json
 {
@@ -202,7 +202,7 @@ npm start
 }
 ```
 
-### 4. Validation Error Response (e.g. invalid signup)
+(iv). Validation Error Response (e.g. invalid signup)
 **Status**: `400 Bad Request`
 ```json
 {
@@ -228,12 +228,76 @@ npm start
 }
 ```
 
-### 5. Task Not Found Response (e.g., accessing unauthorized or non-existent task)
+(v). Task Not Found Response (e.g., accessing unauthorized or non-existent task)
 **Status**: `404 Not Found`
 ```json
 {
   "success": false,
   "statusCode": 404,
   "message": "Task not found"
+}
+```
+
+(vi). Task Update Success (`PATCH /api/tasks/:id`)
+**Status**: `200 OK`
+```json
+{
+  "success": true,
+  "message": "Task updated successfully",
+  "task": {
+    "title": "Set up validations",
+    "description": "Ensure email formatting and dueDates are safe",
+    "status": "completed",
+    "userId": 1,
+    "_id": "6a3fb22b78cc350e69ea0ba0",
+    "createdAt": "2026-06-27T11:21:15.790Z",
+    "updatedAt": "2026-06-27T11:25:00.123Z"
+  }
+}
+```
+
+(vii). Task View Success (`GET /api/tasks/:id`)
+**Status**: `200 OK`
+```json
+{
+  "success": true,
+  "task": {
+    "title": "Set up validations",
+    "description": "Ensure email formatting and dueDates are safe",
+    "status": "completed",
+    "userId": 1,
+    "_id": "6a3fb22b78cc350e69ea0ba0",
+    "createdAt": "2026-06-27T11:21:15.790Z",
+    "updatedAt": "2026-06-27T11:25:00.123Z"
+  }
+}
+```
+
+(viii). All Tasks View Success (`GET /api/tasks`)
+**Status**: `200 OK`
+```json
+{
+  "success": true,
+  "count": 1,
+  "tasks": [
+    {
+      "title": "Set up validations",
+      "description": "Ensure email formatting and dueDates are safe",
+      "status": "completed",
+      "userId": 1,
+      "_id": "6a3fb22b78cc350e69ea0ba0",
+      "createdAt": "2026-06-27T11:21:15.790Z",
+      "updatedAt": "2026-06-27T11:25:00.123Z"
+    }
+  ]
+}
+```
+
+(ix). Task Deletion Success (`DELETE /api/tasks/:id`)
+**Status**: `200 OK`
+```json
+{
+  "success": true,
+  "message": "Task deleted successfully"
 }
 ```
