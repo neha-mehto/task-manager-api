@@ -27,10 +27,20 @@ const taskSchema = new mongoose.Schema(
             type: Number,
             required: true,
         },
+        category: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Category",
+            default: null,
+        },
+
+        tags: {
+            type: [String],
+            default: [],
+        },
     },
     {
         timestamps: true,
     }
 );
 
-module.exports = mongoose.model("Task", taskSchema);
+module.exports = mongoose.models.Task || mongoose.model("Task", taskSchema);
